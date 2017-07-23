@@ -3,3 +3,4 @@
 all-about-monads.mediawiki
 dist/
 cabal-dev/
+*.log

@@ -20,8 +20,8 @@ Try: ./ex3 mother
      ./ex3 father mother
 -}
 
-import Monad
-import System
+import Control.Monad
+import System.Environment
 
 -- everything you need to know about sheep
 data Sheep = Sheep {name::String, mother::Maybe Sheep, father::Maybe Sheep}
