@@ -3,7 +3,6 @@
    Time-stamp: <Mon Nov 10 11:58:21 2003>
    License:    GPL
 -}
-
 {- DESCRIPTION
 
 Example 2 - Do notation
@@ -11,9 +10,12 @@ Example 2 - Do notation
 Usage: Compile the code and execute the resulting program.
        It will print Dolly's maternal grandfather.
 -}
-
 -- everything you need to know about sheep
-data Sheep = Sheep {name::String, mother::Maybe Sheep, father::Maybe Sheep}
+data Sheep = Sheep
+  { name :: String
+  , mother :: Maybe Sheep
+  , father :: Maybe Sheep
+  }
 
 -- we show sheep by name
 instance Show Sheep where
@@ -26,38 +28,40 @@ instance Show Sheep where
 --    Nothing  >>= f = Nothing
 --    (Just x) >>= f = f x
 --    return         = Just
-
 -- we can use do-notation to build complicated sequences
 maternalGrandfather :: Sheep -> Maybe Sheep
-maternalGrandfather s = do m <- mother s
-                           father m
+maternalGrandfather s = do
+  m <- mother s
+  father m
 
 fathersMaternalGrandmother :: Sheep -> Maybe Sheep
-fathersMaternalGrandmother s = do f  <- father s
-                                  gm <- mother f
-				  mother gm
+fathersMaternalGrandmother s = do
+  f <- father s
+  gm <- mother f
+  mother gm
 
 mothersPaternalGrandfather :: Sheep -> Maybe Sheep
-mothersPaternalGrandfather s = do m  <- mother s
-                                  gf <- father m
-				  father gf
+mothersPaternalGrandfather s = do
+  m <- mother s
+  gf <- father m
+  father gf
 
 -- this builds our sheep family tree
 breedSheep :: Sheep
-breedSheep = let adam   = Sheep "Adam" Nothing Nothing
-                 eve    = Sheep "Eve" Nothing Nothing
-		 uranus = Sheep "Uranus" Nothing Nothing
-		 gaea   = Sheep "Gaea" Nothing Nothing
-		 kronos = Sheep "Kronos" (Just gaea) (Just uranus)
-                 holly  = Sheep "Holly" (Just eve) (Just adam)
-	         roger  = Sheep "Roger" (Just eve) (Just kronos)
-	         molly  = Sheep "Molly" (Just holly) (Just roger)
-	     in Sheep "Dolly" (Just molly) Nothing
+breedSheep =
+  let adam = Sheep "Adam" Nothing Nothing
+      eve = Sheep "Eve" Nothing Nothing
+      uranus = Sheep "Uranus" Nothing Nothing
+      gaea = Sheep "Gaea" Nothing Nothing
+      kronos = Sheep "Kronos" (Just gaea) (Just uranus)
+      holly = Sheep "Holly" (Just eve) (Just adam)
+      roger = Sheep "Roger" (Just eve) (Just kronos)
+      molly = Sheep "Molly" (Just holly) (Just roger)
+  in Sheep "Dolly" (Just molly) Nothing
 
 -- print Dolly's maternal grandfather
 main :: IO ()
-main = let dolly = breedSheep
-       in do print (maternalGrandfather dolly)
-	
+main =
+  let dolly = breedSheep
+  in do print (maternalGrandfather dolly)
 -- END OF FILE
-	
