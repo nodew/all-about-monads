@@ -12,7 +12,7 @@ Build-type:          Simple
 Cabal-version:       >=1.2
 
 Executable all-about-monads
-  Main-is:           transform.hs
-  Hs-source-dirs:    .
-  Build-depends:     base,
-                     pandoc
+  main-is:           transform.hs
+  hs-source-dirs:    .
+  build-depends:     base
+                   , pandoc

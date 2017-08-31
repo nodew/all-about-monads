@@ -18,54 +18,54 @@
 
 -- -}
 
--- import Control.Monad
--- import System.IO
--- import System.Environment
--- import Data.FiniteMap
--- import Data.Char(isSpace)
+import Control.Monad
+import System.IO
+import System.Environment
+import Data.Map.Lazy hiding (map, foldl)
+import Data.Char(isSpace)
 
--- -- an Entry is a key and a value, both Strings
--- data Entry = Entry {key::String, value::String}
+-- an Entry is a key and a value, both Strings
+data Entry = Entry {key::String, value::String}
 
--- -- show an entry as "key = value"
--- instance Show Entry where
---   show e = show (key e) ++ " = " ++ (show (value e))
+-- show an entry as "key = value"
+instance Show Entry where
+  show e = show (key e) ++ " = " ++ (show (value e))
 
--- -- we parse "key = value" strings into Entry values
--- instance Read Entry where
---   readsPrec _ s = readsEntry s
+-- we parse "key = value" strings into Entry values
+instance Read Entry where
+  readsPrec _ s = readsEntry s
 
--- readsEntry :: ReadS Entry
--- readsEntry s = [(Entry (trim key) (trim val), s'') | (key, s')    <- [break (=='=') s],
---                                                      (x:val, s'') <- [break (=='\n') s'] ]
+readsEntry :: ReadS Entry
+readsEntry s = [(Entry (trim key) (trim val), s'') | (key, s')    <- [break (=='=') s],
+                                                     (x:val, s'') <- [break (=='\n') s'] ]
+-- remove leading and trailing whitespace
+trim :: String -> String
+trim s = dropWhile isSpace (reverse (dropWhile isSpace (reverse s)))
 
--- -- remove leading and trailing whitespace
--- trim :: String -> String
--- trim s = dropWhile isSpace (reverse (dropWhile isSpace (reverse s)))
+-- convenience function
+openForReading :: FilePath -> IO Handle
+openForReading f = openFile f ReadMode
 
--- -- convenience function
--- openForReading :: FilePath -> IO Handle
--- openForReading f = openFile f ReadMode
+-- a Dict is just a finite map from strings to strings
+type Dict = Map String String
 
--- -- a Dict is just a finite map from strings to strings
--- type Dict = FiniteMap String String
+-- this an auxilliary function used with foldl
+addEntry :: Dict -> Entry -> Dict
+addEntry d e = insert (key e) (value e) d
 
--- -- this an auxilliary function used with foldl
--- addEntry :: Dict -> Entry -> Dict
--- addEntry d e = addToFM d (key e) (value e)
+-- this is an auxiliiary function used with foldM inside the IO monad
+addDataFromFile :: Dict -> Handle -> IO Dict
+addDataFromFile dict hdl = do {
+                              ; contents <- hGetContents hdl
+                              ; entries  <- return (map read (lines contents))
+                              ; return (foldl (addEntry) dict entries) }
 
--- -- this is an auxiliiary function used with foldM inside the IO monad
--- addDataFromFile :: Dict -> Handle -> IO Dict
--- addDataFromFile dict hdl = do contents <- hGetContents hdl
---                               entries  <- return (map read (lines contents))
--- 			      return (foldl (addEntry) dict entries)
+-- this program builds a dictionary from the entries in all files named on the
+-- command line and then prints it out as an association list
+main :: IO ()
+main = do files   <- getArgs
+          handles <- mapM openForReading files
+          dict    <- foldM addDataFromFile empty handles
+          print (toList dict)
 
--- -- this program builds a dictionary from the entries in all files named on the
--- -- command line and then prints it out as an association list
--- main :: IO ()
--- main = do files   <- getArgs
---           handles <- mapM openForReading files
--- 	  dict    <- foldM addDataFromFile emptyFM handles
--- 	  print (fmToList dict)
-
--- -- END OF FILE
+-- END OF FILE
