@@ -13,9 +13,10 @@ Usage: Compile the code and execute the resulting program
        The program will print only the names of the directories.
 -}
 
-import Monad
-import Directory
-import System
+import Control.Monad
+import System.Directory
+import System.Environment
+import System.IO
 
 -- NOTE: doesDirectoryExist has type FilePath -> IO Bool
 

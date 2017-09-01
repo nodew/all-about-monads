@@ -11,11 +11,11 @@ Example 7 - Using the lifting functions
 Usage: Compile the code and execute the resulting program.
        It will print out a number of different lists and their
        combinations.
-       
+
 Try: ./ex7
 -}
 
-import Monad
+import Control.Monad
 
 -- allCombinations returns a list containing the result of
 -- folding the binary operator through all combinations
@@ -29,9 +29,9 @@ allCombinations fn []     = []
 allCombinations fn (l:ls) = foldl (liftM2 fn) l ls
 
 -- print an example
-showExample :: (Show a) => String -> (a -> a -> a) -> [[a]] -> IO ()
-showExample opName op ls = do putStrLn $ "opName over " ++ (show ls) ++ " = "
-                              putStrLn $ "  " ++ (show (allCombinations op ls)) 
+showExample :: Show a => String -> (a -> a -> a) -> [[a]] -> IO ()
+showExample opName op ls = do putStrLn $ "opName " ++ opName ++ " over " ++ (show ls) ++ " = "
+                              putStrLn $ "  " ++ (show (allCombinations op ls))
 
 -- shows a few examples of using allCombinations
 main :: IO ()

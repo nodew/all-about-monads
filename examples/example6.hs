@@ -18,13 +18,14 @@ Try: ./ex6 "John"
      ./ex6 "Fred"
 -}
 
-import Monad
-import System
-import Char (isSpace)
+import Control.Monad
+import System.IO
+import System.Environment
+import Data.Char (isSpace)
 
 -- swapNames converts a string like "Smith, John" into "John Smith"
 swapNames :: String -> String
-swapNames s = let (ln,fn) = break (==',') s
+swapNames s = let (ln, fn) = break (== ',') s
               in (dropWhile isSpace (tail fn)) ++ " " ++ ln
 
 -- getName looks up the name in the database and returns the

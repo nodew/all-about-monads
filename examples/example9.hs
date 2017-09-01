@@ -12,7 +12,7 @@ Usage: Compile the code and execute the resulting program.
        The first argument is a variable name, the second
        is an environment stack (list of String to String
        association lists).
-       
+
 Try: ./ex9 'depth' '[[("name","test"),("depth","2")], [("depth","1")]]'
      ./ex9 'width' '[[("name","test"),("depth","2")], [("depth","1")]]'
      ./ex9 'var3'  '[[("var1","value1"),("var2","value2*")], [("var2","value2"),("var3","value3")]]'
@@ -21,12 +21,12 @@ Try: ./ex9 'depth' '[[("name","test"),("depth","2")], [("depth","1")]]'
      ./ex9 'var'   '[[("var1","value1"),("var2","value2*")], [("var2","value2"),("var3","value3")]]'
 -}
 
-import System
-import Monad
+import System.Environment
+import Control.Monad
 
 type Variable = String
 type Value = String
-type EnvironmentStack = [[(Variable,Value)]]
+type EnvironmentStack = [[(Variable, Value)]]
 
 -- lookupVar retrieves a variable's value from the environment stack
 -- It uses msum in the Maybe monad to return the first non-Nothing value.
