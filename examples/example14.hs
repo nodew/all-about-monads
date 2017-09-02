@@ -16,10 +16,10 @@ Try: cat file | ./ex14 "aeiou" "X"
      ./ex14 "abc"
 -}
 
-import Monad
-import System
-import IO
-import Control.Monad.Error
+import Control.Monad
+import System.Environment
+import System.IO
+import Control.Monad.Except
 
 -- translate char in set1 to corresponding char in set2
 translate :: String -> String -> Char -> Char
@@ -39,9 +39,9 @@ usage e = do putStrLn "Usage: ex14 set1 set2"
 
 -- translates stdin to stdout based on commandline arguments
 main :: IO ()
-main = (do [set1,set2] <- getArgs
-           contents    <- hGetContents stdin
-           putStr $ translateString set1 set2 contents)
+main = do { [set1, set2] <- getArgs
+          ; contents    <- hGetContents stdin
+          ; putStr $ translateString set1 set2 contents }
        `catchError` usage
 
 -- END OF FILE

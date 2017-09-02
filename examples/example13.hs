@@ -20,9 +20,10 @@ Try: ./ex13 34 f3 bean
 
 -}
 
-import Monad
-import System
-import Char
+import Control.Monad
+import System.Environment
+import Data.Char
+import Prelude hiding (init)
 
 -- we can parse three different types of terms
 data Parsed = Digit Integer | Hex Integer | Word String deriving Show
@@ -31,7 +32,7 @@ data Parsed = Digit Integer | Hex Integer | Word String deriving Show
 parseHexDigit :: Parsed -> Char -> [Parsed]
 parseHexDigit (Hex n) c = if isHexDigit c then
                             return (Hex ((n*16) + (toInteger (digitToInt c))))
-		          else
+                          else
                             mzero
 parseHexDigit _       _ = mzero
 
@@ -42,7 +43,7 @@ parseDigit (Digit n) c = if isDigit c then
                          else
                            mzero
 parseDigit _         _ = mzero
-		   
+
 -- attempts to add a character to the parsed representation of a word
 parseWord :: Parsed -> Char -> [Parsed]
 parseWord (Word s) c = if isAlpha c then

@@ -15,23 +15,20 @@ Usage: Compile the code and execute the resulting program
        argument that is not a valid hexadecimal number, the
        program will print an error message describing the
        location of the first invalid character.
-       
-Try: ./ex12 7f beef 10 able f00d 
+
+Try: ./ex12 7f beef 10 able f00d
 
 -}
 
-import Monad
-import System
-import Control.Monad.Error
-import Char
+import Control.Monad
+import System.Environment
+import Control.Monad.Except
+import Data.Char
 
 -- This is the type of our parse error representation.
-data ParseError = Err {location::Int, reason::String}
-
--- We make it an instance of the Error class
-instance Error ParseError where
-  noMsg    = Err 0 "Parse Error"
-  strMsg s = Err 0 s
+data ParseError = Err {
+  location::Int,
+  reason::String }
 
 -- For our monad type constructor, we use Either ParseError
 -- which represents failure using Left ParseError or a
@@ -42,10 +39,11 @@ type ParseMonad = Either ParseError
 -- an Integer in the ParseMonad monad and throws an error on an
 -- invalid character
 parseHexDigit :: Char -> Int -> ParseMonad Integer
-parseHexDigit c idx = if isHexDigit c then
-                        return (toInteger (digitToInt c))
-		      else
-		        throwError (Err idx ("Invalid character '" ++ [c] ++ "'"))
+parseHexDigit c idx =
+  if isHexDigit c then
+    return (toInteger (digitToInt c))
+  else
+    throwError (Err idx ("Invalid character '" ++ [c] ++ "'"))
 
 -- parseHex parses a string containing a hexadecimal number into
 -- an Integer in the ParseMonad monad.  A parse error from parseHexDigit
@@ -53,8 +51,8 @@ parseHexDigit c idx = if isHexDigit c then
 parseHex :: String -> ParseMonad Integer
 parseHex s = parseHex' s 0 1
   where parseHex' []      val _   = return val
-        parseHex' (c:cs)  val idx = do d <- parseHexDigit c idx
-	                               parseHex' cs ((val * 16) + d) (idx + 1)
+        parseHex' (c:cs)  val idx = do { d <- parseHexDigit c idx
+                                       ; parseHex' cs ((val * 16) + d) (idx + 1)}
 
 -- toString converts an Integer into a String in the ParseMonad monad
 toString :: Integer -> ParseMonad String

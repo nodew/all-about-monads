@@ -23,29 +23,36 @@ Try: ./ex11 "Bill Clinton"
      ./ex11 Madonna
 -}
 
-import Monad
-import System
+import Control.Monad
+import System.Environment
 
 -- this our super-simple email preference system
 type EmailAddr = String
 data MailPref = HTML | Plain deriving Show
 
-data MailSystem = MS { fullNameDB::[(String,EmailAddr)],
-                       nickNameDB::[(String,EmailAddr)],
-		       prefsDB   ::[(EmailAddr,MailPref)] }
+data MailSystem = MS {
+  fullNameDB:: [(String,EmailAddr)],
+  nickNameDB:: [(String,EmailAddr)],
+  prefsDB   :: [(EmailAddr,MailPref)]
+}
 
 -- this is a more convenient way to specify user information
-data UserInfo = User { name::String,
-                       nick::String,
-		       email::EmailAddr,
-		       prefs::MailPref }
+data UserInfo = User {
+  name:: String,
+  nick:: String,
+  email:: EmailAddr,
+  prefs:: MailPref
+}
 
 -- makeMailSystem will make a MailSystem from a list of users
 makeMailSystem :: [UserInfo] -> MailSystem
-makeMailSystem users = let fullLst = map (\u -> (name u, email u))  users
-                           nickLst = map (\u -> (nick u, email u))  users
-			   prefLst = map (\u -> (email u, prefs u)) users
-		       in MS fullLst nickLst prefLst
+makeMailSystem users =
+  let
+    fullLst = map (\u -> (name u, email u))  users
+    nickLst = map (\u -> (nick u, email u))  users
+    prefLst = map (\u -> (email u, prefs u)) users
+  in
+    MS fullLst nickLst prefLst
 
 -- getMailPrefs returns the email preference for a given user,
 -- or Nothing if the user is not in the system.
@@ -59,11 +66,12 @@ getMailPrefs sys name =
 
 -- print the email preference of the person named on the command-line
 main :: IO ()
-main = do let users = [ User "Bill Gates"      "billy"       "billg@microsoft.com" HTML,
-                        User "Bill Clinton"    "slick willy" "bill@hope.ar.us"     Plain,
-			User "Michael Jackson" "jacko"       "mj@wonderland.org"   HTML ]
-	      mailsys = makeMailSystem users
-	  args <- getArgs
-          print (getMailPrefs mailsys (args!!0))
-	  
+main = do
+  let users   = [ User "Bill Gates"      "billy"       "billg@microsoft.com" HTML,
+                  User "Bill Clinton"    "slick willy" "bill@hope.ar.us"     Plain,
+                  User "Michael Jackson" "jacko"       "mj@wonderland.org"   HTML ]
+      mailsys = makeMailSystem users
+  args <- getArgs
+  print (getMailPrefs mailsys (args!!0))
+
 -- END OF FILE

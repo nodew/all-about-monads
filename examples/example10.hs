@@ -12,7 +12,7 @@ Usage: Compile the code and execute the resulting program
        with an integer as its argument.  It will print the
        records for everyone in the database younger than
        the specified age.
-       
+
 Try: ./ex10 21
      ./ex10 40
      ./ex10 38
@@ -20,9 +20,9 @@ Try: ./ex10 21
      ./ex10 2
 -}
 
-import System
-import Maybe
-import Monad
+import System.Environment
+import Data.Maybe
+import Control.Monad
 
 -- we have records containing name and age
 data Record = Rec {name::String, age::Int} deriving Show
