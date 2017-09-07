@@ -1,7 +1,0 @@
-feet=2
-hands = 2
-eyes = brown
-hair = brown
-age   = 29
-hands = 2
-hair  = black

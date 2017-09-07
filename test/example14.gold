@@ -16,10 +16,10 @@ Try: cXt fXlX | ./Xx14 "XXXXX" "X"
      ./Xx14 "Xbc"
 -}
 
-XmpXrt MXnXd
-XmpXrt SystXm
-XmpXrt IO
-XmpXrt CXntrXl.MXnXd.ErrXr
+XmpXrt CXntrXl.MXnXd
+XmpXrt SystXm.EnvXrXnmXnt
+XmpXrt SystXm.IO
+XmpXrt CXntrXl.MXnXd.ExcXpt
 
 -- trXnslXtX chXr Xn sXt1 tX cXrrXspXndXng chXr Xn sXt2
 trXnslXtX :: StrXng -> StrXng -> ChXr -> ChXr
@@ -39,9 +39,9 @@ XsXgX X = dX pXtStrLn "UsXgX: Xx14 sXt1 sXt2"
 
 -- trXnslXtXs stdXn tX stdXXt bXsXd Xn cXmmXndlXnX XrgXmXnts
 mXXn :: IO ()
-mXXn = (dX [sXt1,sXt2] <- gXtArgs
-           cXntXnts    <- hGXtCXntXnts stdXn
-           pXtStr $ trXnslXtXStrXng sXt1 sXt2 cXntXnts)
+mXXn = dX { [sXt1, sXt2] <- gXtArgs
+          ; cXntXnts    <- hGXtCXntXnts stdXn
+          ; pXtStr $ trXnslXtXStrXng sXt1 sXt2 cXntXnts }
        `cXtchErrXr` XsXgX
 
 -- END OF FILE
@@ -63,10 +63,10 @@ _____cat_file_|_./ex14_"_"_"_"
 _____./ex14_"abc"
 -}
 
-import_Monad
-import_System
-import_IO
-import_Control.Monad.Error
+import_Control.Monad
+import_System.Environment
+import_System.IO
+import_Control.Monad.Except
 
 --_translate_char_in_set1_to_corresponding_char_in_set2
 translate_::_String_->_String_->_Char_->_Char
@@ -86,9 +86,9 @@ _____________putStrLn_"characters_from_set2_and_writes_the_translation_to_stdout
 
 --_translates_stdin_to_stdout_based_on_commandline_arguments
 main_::_IO_()
-main_=_(do_[set1,set2]_<-_getArgs
-___________contents____<-_hGetContents_stdin
-___________putStr_$_translateString_set1_set2_contents)
+main_=_do_{_[set1,_set2]_<-_getArgs
+__________;_contents____<-_hGetContents_stdin
+__________;_putStr_$_translateString_set1_set2_contents_}
 _______`catchError`_usage
 
 --_END_OF_FILE

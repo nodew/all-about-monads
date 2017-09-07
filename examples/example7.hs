@@ -30,7 +30,7 @@ allCombinations fn (l:ls) = foldl (liftM2 fn) l ls
 
 -- print an example
 showExample :: Show a => String -> (a -> a -> a) -> [[a]] -> IO ()
-showExample opName op ls = do putStrLn $ "opName " ++ opName ++ " over " ++ (show ls) ++ " = "
+showExample opName op ls = do putStrLn $ "opName over " ++ (show ls) ++ " = "
                               putStrLn $ "  " ++ (show (allCombinations op ls))
 
 -- shows a few examples of using allCombinations
