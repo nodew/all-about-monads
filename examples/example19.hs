@@ -13,36 +13,36 @@ Usage: Compile the code and run it.  Type an integer value
        string whose format and contents depend in a complicated
        way on the input number.
 
-Try: echo "0"         | ./ex19 
-     echo "7"         | ./ex19 
-     echo "9"         | ./ex19 
-     echo "10"        | ./ex19 
-     echo "19"        | ./ex19 
-     echo "20"        | ./ex19 
-     echo "68"        | ./ex19 
-     echo "199"       | ./ex19 
-     echo "200"       | ./ex19 
-     echo "684"       | ./ex19 
-     echo "19999"     | ./ex19 
-     echo "20000"     | ./ex19 
-     echo "20002"     | ./ex19 
-     echo "340000"    | ./ex19 
-     echo "837364"    | ./ex19 
-     echo "1999997"   | ./ex19 
-     echo "1999999"   | ./ex19 
-     echo "2000000"   | ./ex19 
-     echo "2000001"   | ./ex19 
-     echo "2000002"   | ./ex19 
-     echo "2000003"   | ./ex19 
-     echo "2000004"   | ./ex19 
-     echo "7001001"   | ./ex19 
-     echo "746392736" | ./ex19 
+Try: echo "0"         | ./ex19
+     echo "7"         | ./ex19
+     echo "9"         | ./ex19
+     echo "10"        | ./ex19
+     echo "19"        | ./ex19
+     echo "20"        | ./ex19
+     echo "68"        | ./ex19
+     echo "199"       | ./ex19
+     echo "200"       | ./ex19
+     echo "684"       | ./ex19
+     echo "19999"     | ./ex19
+     echo "20000"     | ./ex19
+     echo "20002"     | ./ex19
+     echo "340000"    | ./ex19
+     echo "837364"    | ./ex19
+     echo "1999997"   | ./ex19
+     echo "1999999"   | ./ex19
+     echo "2000000"   | ./ex19
+     echo "2000001"   | ./ex19
+     echo "2000002"   | ./ex19
+     echo "2000003"   | ./ex19
+     echo "2000004"   | ./ex19
+     echo "7001001"   | ./ex19
+     echo "746392736" | ./ex19
 -}
 
-import IO
-import Monad
-import System
-import Char
+import System.IO
+import Control.Monad
+import System.Environment
+import Data.Char
 import Control.Monad.Cont
 
 {- We use the continuation monad to perform "escapes" from code blocks.

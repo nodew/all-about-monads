@@ -16,35 +16,35 @@ Usage: Compile the code and run it.  Type an integer value
        number.
 
 Try: echo "0"            | ./ex21
-     echo "7"            | ./ex21 
-     echo "9"            | ./ex21 
-     echo "10"           | ./ex21 
-     echo "19"           | ./ex21 
-     echo "20"           | ./ex21 
-     echo "68"           | ./ex21 
-     echo "199"          | ./ex21 
-     echo -e "200\n37"   | ./ex21 
-     echo -e "684\n9483" | ./ex21 
-     echo -e "19999\n0"  | ./ex21 
-     echo "20000"        | ./ex21 
-     echo "20002"        | ./ex21 
-     echo "340000"       | ./ex21 
-     echo "837364"       | ./ex21 
-     echo "1999997"      | ./ex21 
-     echo "1999999"      | ./ex21 
-     echo "2000000"      | ./ex21 
-     echo "2000001"      | ./ex21 
-     echo "2000002"      | ./ex21 
-     echo "2000003"      | ./ex21 
-     echo "2000004"      | ./ex21 
-     echo "7001001"      | ./ex21 
-     echo "746392736"    | ./ex21 
+     echo "7"            | ./ex21
+     echo "9"            | ./ex21
+     echo "10"           | ./ex21
+     echo "19"           | ./ex21
+     echo "20"           | ./ex21
+     echo "68"           | ./ex21
+     echo "199"          | ./ex21
+     echo -e "200\n37"   | ./ex21
+     echo -e "684\n9483" | ./ex21
+     echo -e "19999\n0"  | ./ex21
+     echo "20000"        | ./ex21
+     echo "20002"        | ./ex21
+     echo "340000"       | ./ex21
+     echo "837364"       | ./ex21
+     echo "1999997"      | ./ex21
+     echo "1999999"      | ./ex21
+     echo "2000000"      | ./ex21
+     echo "2000001"      | ./ex21
+     echo "2000002"      | ./ex21
+     echo "2000003"      | ./ex21
+     echo "2000004"      | ./ex21
+     echo "7001001"      | ./ex21
+     echo "746392736"    | ./ex21
 -}
 
-import IO
-import Monad
-import System
-import Char
+import System.IO
+import Control.Monad
+import System.Environment
+import Data.Char
 import Control.Monad.Cont
 
 {- We use the continuation monad to perform "escapes" from code blocks.

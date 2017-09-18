@@ -39,10 +39,10 @@ Try: ./ex18 "0"
      ./ex18 "746392736"
 -}
 
-import IO
-import Monad
-import System
-import Char
+import System.IO
+import Control.Monad
+import System.Environment
+import Data.Char
 import Control.Monad.Cont
 
 
@@ -57,7 +57,7 @@ import Control.Monad.Cont
    200-19999       n                            digits of (n/2)
    20000-1999999   (n/2) backwards              none
    >= 2000000      sum of digits of (n/2)       digits of (n/2)
--}  
+-}
 fun :: Int -> String
 fun n = (`runCont` id) $ do
         str <- callCC $ \exit1 -> do     -- define "exit1"

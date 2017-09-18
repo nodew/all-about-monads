@@ -12,7 +12,7 @@ Usage: Compile the code to produce a simple firewall simulator.
 
        The first argument is a file (look at rules.txt) that contains
        a list of firewall rules.
-       
+
        The second argument is a file (look at packets.txt) that contains
        a list of packets.
 
@@ -21,15 +21,15 @@ Usage: Compile the code to produce a simple firewall simulator.
        of the packets in the packet file.  The program will display all
        of the allowed packets followed by a log of the simulated
        firewall activity.
-       
+
 Try: ./ex17 rules.txt packets.txt
 -}
 
-import IO
-import Monad
-import System
-import Maybe
-import List
+import System.IO
+import Control.Monad
+import System.Environment
+import Data.Maybe
+import Data.List
 import Control.Monad.Writer
 
 -- this is the definition of our simple packet format
@@ -42,7 +42,7 @@ instance Eq Data where
   AnyData   == _         = True
   _         == AnyData   = True
   (Data s1) == (Data s2) = s1 == s2
-  
+
 instance Eq Addr where
   AnyHost   == _         = True
   _         == AnyHost   = True
@@ -111,7 +111,7 @@ groupSame initial merge (x:xs) fn = do (result,output) <- return (runWriter (fn 
                                        new             <- merge initial output
                                        rest            <- groupSame new merge xs fn
                                        return (result:rest)
-     
+
 -- this filters a list of packets, producing a filtered packet list and a log of
 -- the activity in which consecutive messages are merged
 filterAll :: [Rule] -> [Packet] -> Writer [Entry] [Packet]
