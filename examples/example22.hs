@@ -12,7 +12,7 @@ Usage: Compile the code to produce a simple firewall simulator.
 
        The first argument is a file (look at rules.txt) that contains
        a list of firewall rules.
-       
+
        The second argument is a file (look at packets.txt) that contains
        a list of packets.
 
@@ -21,16 +21,16 @@ Usage: Compile the code to produce a simple firewall simulator.
        of the packets in the packet file.  The program will display all
        of the allowed packets followed by a log of the simulated
        firewall activity.
-       
+
 Try: ./ex22 rules.txt packets.txt
 -}
 
-import IO
-import Monad
-import System
-import Maybe
-import List
-import Time
+import System.IO
+import Control.Monad
+import System.Environment
+import Data.Maybe
+import Data.List
+import System.Time
 import Control.Monad.Writer
 import Control.Monad.Trans
 
@@ -44,7 +44,7 @@ instance Eq Data where
   AnyData   == _         = True
   _         == AnyData   = True
   (Data s1) == (Data s2) = s1 == s2
-  
+
 instance Eq Addr where
   AnyHost   == _         = True
   _         == AnyHost   = True
@@ -78,36 +78,39 @@ logMsg s = do t <- liftIO getClockTime
 
 -- this handles one packet
 filterOne :: [Rule] -> Packet -> LogWriter (Maybe Packet)
-filterOne rules packet = do rule <- return (match rules packet)
-                            case rule of
-                              Nothing  -> do logMsg ("DROPPING UNMATCHED PACKET: " ++ (show packet))
-                                             return Nothing
-                              (Just r) -> do when (logIt r) (logMsg ("MATCH: " ++ (show r) ++ " <=> " ++ (show packet)))
-                                             case r of
-                                               (Rule Accept _ _) -> return (Just packet)
-                                               (Rule Reject _ _) -> return Nothing
+filterOne rules packet = do
+  rule <- return (match rules packet)
+  case rule of
+    Nothing  -> do logMsg $ ("DROPPING UNMATCHED PACKET: " ++ (show packet))
+                   return Nothing
+    (Just r) -> do when (logIt r) (logMsg ("MATCH: " ++ (show r) ++ " <=> " ++ (show packet)))
+                   case r of
+                     (Rule Accept _ _) -> return (Just packet)
+                     (Rule Reject _ _) -> return Nothing
 
 -- this filters a list of packets, producing a filtered packet list
 -- and a log of the activity
 filterAll :: [Rule] -> [Packet] -> LogWriter [Packet]
-filterAll rules packets = do logMsg "STARTING PACKET FILTER"
-                             out <- mapM (filterOne rules) packets
-                             logMsg "STOPPING PACKET FILTER"
-                             return (catMaybes out)
+filterAll rules packets = do 
+  logMsg "STARTING PACKET FILTER"
+  out <- mapM (filterOne rules) packets
+  logMsg "STOPPING PACKET FILTER"
+  return (catMaybes out)
 
 -- read the rule data from the file named in the first argument, and the packet data from
 -- the file named in the second argument, and then print the accepted packets followed by
 -- a log generated during the computation.
 main :: IO ()
-main = do args       <- getArgs
-	  ruleData   <- readFile (args!!0)
-	  packetData <- readFile (args!!1)
-	  let rules   = (read ruleData)::[Rule]
-	      packets = (read packetData)::[Packet]
-	  (out,log)  <- runWriterT (filterAll rules packets)
-	  putStrLn "ACCEPTED PACKETS"
-	  putStr (unlines (map show out))
-	  putStrLn "\n\nFIREWALL LOG"
-	  putStr (unlines (map show log))
+main = do
+  args       <- getArgs
+  ruleData   <- readFile (args!!0)
+  packetData <- readFile (args!!1)
+  let rules   = (read ruleData)::[Rule]
+      packets = (read packetData)::[Packet]
+  (out,log)  <- runWriterT (filterAll rules packets)
+  putStrLn "ACCEPTED PACKETS"
+  putStr (unlines (map show out))
+  putStrLn "\n\nFIREWALL LOG"
+  putStr (unlines (map show log))
 
 -- END OF FILE

@@ -15,7 +15,7 @@ operator is useful here.
 
 -}
 
-import Monad
+import Control.Monad
 
 -- everything you need to know about sheep
 data Sheep = Sheep {name::String, mother::Maybe Sheep, father::Maybe Sheep}
@@ -32,12 +32,12 @@ maternalGrandfather s = do m <- mother s
 fathersMaternalGrandmother :: Sheep -> Maybe Sheep
 fathersMaternalGrandmother s = do f  <- father s
                                   gm <- mother f
-				  mother gm
+                                  mother gm
 
 mothersPaternalGrandfather :: Sheep -> Maybe Sheep
 mothersPaternalGrandfather s = do m  <- mother s
                                   gf <- father m
-				  father gf
+                                  father gf
 
 -- here are the new functions
 parent :: Sheep -> Maybe Sheep
@@ -45,7 +45,7 @@ parent s = (mother s) `mplus` (father s)
 
 grandparent :: Sheep -> Maybe Sheep
 grandparent s = (mother s >>= parent) `mplus` (father s >>= parent)
-		   
+
 -- Why couldn't we write:
 -- grandparent s = do p <- parent s
 --                    parent p
@@ -56,12 +56,12 @@ grandparent s = (mother s >>= parent) `mplus` (father s >>= parent)
 breedSheep :: Sheep
 breedSheep = let adam   = Sheep "Adam" Nothing Nothing
                  eve    = Sheep "Eve" Nothing Nothing
-		 uranus = Sheep "Uranus" Nothing Nothing
-		 gaea   = Sheep "Gaea" Nothing Nothing
-		 kronos = Sheep "Kronos" (Just gaea) (Just uranus)
+                 uranus = Sheep "Uranus" Nothing Nothing
+                 gaea   = Sheep "Gaea" Nothing Nothing
+                 kronos = Sheep "Kronos" (Just gaea) (Just uranus)
                  holly  = Sheep "Holly" (Just eve) (Just adam)
-	         roger  = Sheep "Roger" (Just eve) (Just kronos)
-	         molly  = Sheep "Molly" (Just holly) (Just roger)
+                 roger  = Sheep "Roger" (Just eve) (Just kronos)
+                 molly  = Sheep "Molly" (Just holly) (Just roger)
              in Sheep "Dolly" (Just molly) Nothing
 
 
@@ -69,5 +69,5 @@ breedSheep = let adam   = Sheep "Adam" Nothing Nothing
 main :: IO ()
 main = let dolly = breedSheep
        in do print (grandparent dolly)
-	
+
 -- END OF FILE

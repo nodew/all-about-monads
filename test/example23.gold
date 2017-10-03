@@ -9,10 +9,7 @@ Test that we can use the variable substitution:
 variable = 
 var      = 
 
-does not exist
-Action: openFile
-Reason: No such file or directory
-File: no such file
+no such file: openFile: does not exist (No such file or directory)
 ======Test that we can use the variable substitution:
 variable = 
 var      = 

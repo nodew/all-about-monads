@@ -124,15 +124,16 @@ filterAll rules packets = do tell [Log 1 "STARTING PACKET FILTER"]
 -- the file named in the second argument, and then print the accepted packets followed by
 -- a log generated during the computation.
 main :: IO ()
-main = do args       <- getArgs
-	  ruleData   <- readFile (args!!0)
-	  packetData <- readFile (args!!1)
-	  let rules     = (read ruleData)::[Rule]
-	      packets   = (read packetData)::[Packet]
-	      (out,log) = runWriter (filterAll rules packets)
-	  putStrLn "ACCEPTED PACKETS"
-	  putStr (unlines (map show out))
-	  putStrLn "\n\nFIREWALL LOG"
-	  putStr (unlines (map show log))
+main = do 
+  args       <- getArgs
+  ruleData   <- readFile (args!!0)
+  packetData <- readFile (args!!1)
+  let rules     = (read ruleData)::[Rule]
+      packets   = (read packetData)::[Packet]
+      (out,log) = runWriter (filterAll rules packets)
+  putStrLn "ACCEPTED PACKETS"
+  putStr (unlines (map show out))
+  putStrLn "\n\nFIREWALL LOG"
+  putStr (unlines (map show log))
 
 -- END OF FILE

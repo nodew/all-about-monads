@@ -14,21 +14,21 @@ Example 25 - Using the StateT monad transformer
 Usage: Compile the code and run it with an argument between 1 and 8.
        It will print a solution to the N-queens puzzle along with
        a log of the number of choices it had at each step.
-       
+
        The N-queens puzzle is to place N queens on a chess board
        so that no queen can attack another one.
-       
+
 Try: ./ex25 8
      ./ex25 1
      ./ex25 7
 -}
 
-import IO
-import Monad
-import System
-import Maybe
-import List
-import Char (toLower)
+import System.IO
+import Control.Monad
+import System.Environment
+import Data.Maybe
+import Data.List
+import Data.Char (toLower)
 import Control.Monad.State
 import Control.Monad.Writer
 
@@ -48,9 +48,9 @@ instance Show Position where
 instance Ord Position where
   compare p1 p2 = case (rank p1) `compare` (rank p2) of
                     LT -> GT
-		    GT -> LT
-		    _  -> (file p1) `compare` (file p2)
-		    
+                    GT -> LT
+                    _  -> (file p1) `compare` (file p2)
+
 data Kind = Pawn | Knight | Bishop | Rook | Queen | King
   deriving (Eq, Ord, Enum)
 
@@ -79,15 +79,15 @@ newtype Board = Board [(Piece,Position)]
 
 instance Show Board where
   show (Board ps) = let ordered = (sort . swap) ps
-			ranks   = map (showRank ordered) [8,7..1]
-			board   = intersperse "--+--+--+--+--+--+--+--" ranks
-			rlabels = intersperse "  " (map (\n->(show n)++" ") [8,7..1])
-			flabels = "  a  b  c  d  e  f  g  h"
-		    in unlines $ zipWith (++) rlabels board ++ [flabels]
+                        ranks   = map (showRank ordered) [8,7..1]
+                        board   = intersperse "--+--+--+--+--+--+--+--" ranks
+                        rlabels = intersperse "  " (map (\n->(show n)++" ") [8,7..1])
+                        flabels = "  a  b  c  d  e  f  g  h"
+                          in unlines $ zipWith (++) rlabels board ++ [flabels]
     where swap = map (\(a,b)->(b,a))
           showRank ps  r = let rnk = filter (\(p,_)->(rank p)==r) ps
-	                       cs  = map (showPiece rnk) [A .. H]
-			   in concat (intersperse "|" cs)
+                               cs  = map (showPiece rnk) [A .. H]
+                             in concat (intersperse "|" cs)
           showPiece ps f = maybe "  " (show . snd) (find (\(p,_)->(file p)==f) ps)
 
 data Diagonal = Ascending Position | Descending Position
@@ -108,9 +108,12 @@ getDiags :: Position -> (Diagonal,Diagonal)
 getDiags p = (normalize (Ascending p), normalize (Descending p))
 
 -- this is the type of our problem description
-data NQueensProblem = NQP {board::Board,
-                           ranks::[Rank],   files::[File],
-                           asc::[Diagonal], desc::[Diagonal]}
+data NQueensProblem = NQP {
+  board ::Board,
+  ranks ::[Rank],
+  files ::[File],
+  asc   ::[Diagonal],
+  desc  ::[Diagonal]}
 
 -- initial state = empty board, all ranks, files, and diagonals free
 initialState = let fileA = map (\r->Pos A r) [1..8]
@@ -151,7 +154,7 @@ inDiags p = do let (a,d) = getDiags p
                as <- gets asc
                ds <- gets desc
                return $ (elem a as) && (elem d ds)
-	       
+
 -- add a Queen to the board in all allowed positions
 addQueens :: NDS ()
 addQueens = do rs <- gets ranks

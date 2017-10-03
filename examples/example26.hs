@@ -17,9 +17,9 @@ Usage: Compile the code (with -fglasgow-exts) and run it.
 Try: ./ex26
 -}
 
-import IO
-import Monad
-import Char (digitToInt)
+import System.IO
+import Control.Monad
+import Data.Char (digitToInt)
 import Control.Monad.State
 import Control.Monad.Writer
 
@@ -57,7 +57,7 @@ logEach :: (Show a) => [a] -> WriterT [String] [] a
 logEach xs = do x <- lift xs
                 tell ["logEach: " ++ (show x)]
                 return x
-		
+
 {- Here is a computation in MonadState -}
 
 -- increment the state by a specified value

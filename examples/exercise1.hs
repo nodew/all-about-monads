@@ -39,17 +39,17 @@ mothersPaternalGrandfather s = mother s >>= father >>= father
 breedSheep :: Sheep
 breedSheep = let adam   = Sheep "Adam" Nothing Nothing
                  eve    = Sheep "Eve" Nothing Nothing
-		 uranus = Sheep "Uranus" Nothing Nothing
-		 gaea   = Sheep "Gaea" Nothing Nothing
-		 kronos = Sheep "Kronos" (Just gaea) (Just uranus)
+                 uranus = Sheep "Uranus" Nothing Nothing
+                 gaea   = Sheep "Gaea" Nothing Nothing
+                 kronos = Sheep "Kronos" (Just gaea) (Just uranus)
                  holly  = Sheep "Holly" (Just eve) (Just adam)
-	         roger  = Sheep "Roger" (Just eve) (Just kronos)
-	         molly  = Sheep "Molly" (Just holly) (Just roger)
-	     in Sheep "Dolly" (Just molly) Nothing
+                 roger  = Sheep "Roger" (Just eve) (Just kronos)
+                 molly  = Sheep "Molly" (Just holly) (Just roger)
+             in Sheep "Dolly" (Just molly) Nothing
 
 -- print Dolly's maternal grandfather
 main :: IO ()
 main = let dolly = breedSheep
        in do print (maternalGrandfather dolly)
-	
+
 -- END OF FILE

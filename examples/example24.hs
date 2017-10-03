@@ -8,11 +8,11 @@
 
 Example 24 - Using the StateT monad transformer
              with the List monad to achieve non-deterministic
-	     stateful computations
+       stateful computations
 
 Usage: Compile the code and run it.  It will print
        a solution to the following logic puzzle:
-       
+
        An anthropologist is studying a tribe in which men always
        tell the truth and women always alternate between truth
        and lies (they never tell two truths or two lies in a row).
@@ -21,20 +21,20 @@ Usage: Compile the code and run it.  It will print
        the anthropologist doesn't understand the language, so he
        asks the parents.  The first parent says "The child said
        it was a boy".  The second parent says "The child is a
-       girl.  The child lied."  What is the sex of 
+       girl.  The child lied."  What is the sex of
        the child, and which parent is the mother and which is
        the father?
 
        This puzzle appeared in:
        J.A.H. Hunter, Mathematical Brain-Teasers, Dover Publications 1976
-       
+
 Try: ./ex24
 -}
 
-import IO
-import Monad
-import System
-import Maybe
+import System.IO
+import Control.Monad
+import System.Environment
+import Data.Maybe
 import Control.Monad.State
 
 -- First, we develop a language to express logic problems
@@ -42,9 +42,9 @@ type Var   = String
 type Value = String
 data Predicate = Is    Var Value            -- var has specific value
                | Equal Var Var              -- vars have same (unspecified) value
-	       | And   Predicate Predicate  -- both are true
-	       | Or    Predicate Predicate  -- at least one is true
-	       | Not   Predicate            -- it is not true
+               | And   Predicate Predicate  -- both are true
+               | Or    Predicate Predicate  -- at least one is true
+               | Not   Predicate            -- it is not true
   deriving (Eq, Show)
 
 type Variables = [(Var,Value)]
@@ -68,7 +68,7 @@ check (Is var value) vars = do val <- lookup var vars
                                return (val == value)
 check (Equal v1 v2)  vars = do val1 <- lookup v1 vars
                                val2 <- lookup v2 vars
-			       return (val1 == val2)
+                               return (val1 == val2)
 check (And p1 p2)    vars = liftM2 (&&) (check p1 vars) (check p2 vars)
 check (Or  p1 p2)    vars = liftM2 (||) (check p1 vars) (check p2 vars)
 check (Not p)        vars = liftM (not) (check p vars)
@@ -98,14 +98,14 @@ setVar v x = do st <- get
 isConsistent :: Bool -> NDS Bool
 isConsistent partial = do cs <- gets constraints
                           vs <- gets vars
-		          let results = map (\p->check p vs) cs
-		          return $ and (map (maybe partial id) results)
+                          let results = map (\p->check p vs) cs
+                          return $ and (map (maybe partial id) results)
 
 -- Return only the variable bindings that are complete consistent solutions.
 getFinalVars :: NDS Variables
 getFinalVars = do c <- isConsistent False
                   guard c
-		  gets vars
+                  gets vars
 
 -- Get the first solution to the problem, by evaluating the solver computation with
 -- an initial problem state and then returning the first solution in the result list,
@@ -146,9 +146,9 @@ main = do let variables   = []
               constraints = [ Not (Equal "parent1" "parent2"),
                               "parent1" `said` ("child" `said` ("child" `Is` "male")),
                               saidBoth "parent2" ("child" `Is` "female")
-			                         ("child" `lied` ("child" `Is` "male")) ]
-	      problem = PS variables constraints
-	  print $ (`getSolution` problem) $ do tryAllValues "parent1"
+                               ("child" `lied` ("child" `Is` "male")) ]
+              problem = PS variables constraints
+          print $ (`getSolution` problem) $ do tryAllValues "parent1"
                                                tryAllValues "parent2"
                                                tryAllValues "child"
                                                getFinalVars
